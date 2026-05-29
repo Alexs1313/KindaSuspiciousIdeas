@@ -1,4 +1,4 @@
-package com.kindasuspiciousideas
+package com.theksi.kindasuspicious
 
 import android.app.Application
 import com.facebook.react.PackageList

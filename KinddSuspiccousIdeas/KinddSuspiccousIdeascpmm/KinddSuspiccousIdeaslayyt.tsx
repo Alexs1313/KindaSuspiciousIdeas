@@ -6,30 +6,19 @@ type KinddSuspiccousIdeaslayytProps = {
   children: ReactNode;
 };
 
-const KinddSuspiccousIdeaslayyt = ({children}: KinddSuspiccousIdeaslayytProps) => {
+const KinddSuspiccousIdeaslayyt = ({
+  children,
+}: KinddSuspiccousIdeaslayytProps) => {
   return (
-    <ImageBackground
-      style={styles.background}
-      source={require('../../assts/immgs/kinddsuspiccoonbrdbg.png')}>
-      <LinearGradient
-        colors={['rgba(20,29,58,0.2)', 'rgba(10,15,34,0.2)']}
-        style={StyleSheet.absoluteFill}
-      />
-      <LinearGradient
-        colors={[
-          'rgba(5,7,20,0.4)',
-          'rgba(5,7,20,0.6)',
-          'rgba(5,7,20,0.95)',
-        ]}
-        locations={[0, 0.5, 1]}
-        style={StyleSheet.absoluteFill}
-      />
+    <LinearGradient
+      colors={['rgb(11, 1, 67)', 'rgb(0, 1, 15)']}
+      style={styles.background}>
       <ScrollView
         contentContainerStyle={styles.content}
         showsVerticalScrollIndicator={false}>
         <View style={styles.contentInner}>{children}</View>
       </ScrollView>
-    </ImageBackground>
+    </LinearGradient>
   );
 };
 
