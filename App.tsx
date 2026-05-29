@@ -1,18 +1,18 @@
 import {NavigationContainer} from '@react-navigation/native';
 
-import KinddSuspiccousIdeasstakk from './KinddSuspiccousIdeas/KinddSuspiccousIdeasrout/KinddSuspiccousIdeasstakk';
-import {KinddSuspiccousIdeasCasesProvider} from './KinddSuspiccousIdeas/KinddSuspiccousIdeasdata/KinddSuspiccousIdeascasesStore';
-import {KinddSuspiccousIdeasPartyProvider} from './KinddSuspiccousIdeas/KinddSuspiccousIdeasdata/KinddSuspiccousIdeaspartyStore';
+import SuspiciouskinddaIdeasstakk from './SuspiciouskinddaIdeas/SuspiciouskinddaIdeasrout/SuspiciouskinddaIdeasstakk';
+import {SuspiciouskinddaIdeasCasesProvider} from './SuspiciouskinddaIdeas/SuspiciouskinddaIdeasdata/SuspiciouskinddaIdeascasesStore';
+import {SuspiciouskinddaIdeasPartyProvider} from './SuspiciouskinddaIdeas/SuspiciouskinddaIdeasdata/SuspiciouskinddaIdeaspartyStore';
 
 const App = () => {
   return (
-    <KinddSuspiccousIdeasCasesProvider>
-      <KinddSuspiccousIdeasPartyProvider>
+    <SuspiciouskinddaIdeasCasesProvider>
+      <SuspiciouskinddaIdeasPartyProvider>
         <NavigationContainer>
-          <KinddSuspiccousIdeasstakk />
+          <SuspiciouskinddaIdeasstakk />
         </NavigationContainer>
-      </KinddSuspiccousIdeasPartyProvider>
-    </KinddSuspiccousIdeasCasesProvider>
+      </SuspiciouskinddaIdeasPartyProvider>
+    </SuspiciouskinddaIdeasCasesProvider>
   );
 };
 
