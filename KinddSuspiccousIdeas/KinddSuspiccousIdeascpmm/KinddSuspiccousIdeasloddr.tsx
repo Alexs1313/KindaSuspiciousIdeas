@@ -5,6 +5,7 @@ import {
   ImageBackground,
   StyleSheet,
   Image,
+  Platform,
 } from 'react-native';
 import {WebView} from 'react-native-webview';
 import {useNavigation} from '@react-navigation/native';
@@ -105,7 +106,14 @@ const KinddSuspiccousIdeasloddr = () => {
         contentContainerStyle={styles.kinddSuspiccousIdeasScrollContent}
         showsVerticalScrollIndicator={false}>
         <View style={{flex: 1, alignItems: 'center', justifyContent: 'center'}}>
-          <Image source={require('../../assts/immgs/loaderIco.png')} />
+          {Platform.OS === 'ios' ? (
+            <Image source={require('../../assts/immgs/loaderIco.png')} />
+          ) : (
+            <Image
+              source={require('../../assts/immgs/andricon.png')}
+              style={{width: 220, height: 220, borderRadius: 50}}
+            />
+          )}
         </View>
         <View style={styles.kinddSuspiccousIdeasLoaderWrap}>
           <WebView

@@ -1,5 +1,5 @@
 import React from 'react';
-import {Modal, Pressable, StyleSheet, Text, View} from 'react-native';
+import {Modal, Platform, Pressable, StyleSheet, Text, View} from 'react-native';
 
 type KinddSuspiccousIdeaspartyPauseProps = {
   kinddSuspiccousVisible: boolean;
@@ -15,6 +15,7 @@ const KinddSuspiccousIdeaspartyPause = ({
   return (
     <Modal
       visible={kinddSuspiccousVisible}
+      statusBarTranslucent={Platform.OS === 'android'}
       transparent
       animationType="fade"
       onRequestClose={kinddSuspiccousOnResume}>
@@ -27,10 +28,7 @@ const KinddSuspiccousIdeaspartyPause = ({
           <View style={styles.kinddSuspiccousActions}>
             <Pressable
               onPress={kinddSuspiccousOnEndGame}
-              style={[
-                styles.kinddSuspiccousBtn,
-                styles.kinddSuspiccousBtnEnd,
-              ]}>
+              style={[styles.kinddSuspiccousBtn, styles.kinddSuspiccousBtnEnd]}>
               <Text style={styles.kinddSuspiccousBtnText}>End Game</Text>
             </Pressable>
             <Pressable
