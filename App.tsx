@@ -1,19 +1,19 @@
-import {NavigationContainer} from '@react-navigation/native';
+import React from 'react';
+import {StatusBar} from 'react-native';
+import {SafeAreaProvider} from 'react-native-safe-area-context';
+import {RootNavigator} from './src/navigation/RootNavigator';
 
-import SuspiciouskinddaIdeasstakk from './SuspiciouskinddaIdeas/SuspiciouskinddaIdeasrout/SuspiciouskinddaIdeasstakk';
-import {SuspiciouskinddaIdeasCasesProvider} from './SuspiciouskinddaIdeas/SuspiciouskinddaIdeasdata/SuspiciouskinddaIdeascasesStore';
-import {SuspiciouskinddaIdeasPartyProvider} from './SuspiciouskinddaIdeas/SuspiciouskinddaIdeasdata/SuspiciouskinddaIdeaspartyStore';
-
-const App = () => {
+function App(): React.JSX.Element {
   return (
-    <SuspiciouskinddaIdeasCasesProvider>
-      <SuspiciouskinddaIdeasPartyProvider>
-        <NavigationContainer>
-          <SuspiciouskinddaIdeasstakk />
-        </NavigationContainer>
-      </SuspiciouskinddaIdeasPartyProvider>
-    </SuspiciouskinddaIdeasCasesProvider>
+    <SafeAreaProvider>
+      <StatusBar
+        translucent
+        barStyle="light-content"
+        backgroundColor="transparent"
+      />
+      <RootNavigator />
+    </SafeAreaProvider>
   );
-};
+}
 
 export default App;
