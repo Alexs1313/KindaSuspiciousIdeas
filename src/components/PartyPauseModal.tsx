@@ -4,13 +4,13 @@ import {Modal, Platform, Pressable, StyleSheet, Text, View} from 'react-native';
 type PartyPauseModalProps = {
   visible: boolean;
   onResume: () => void;
-  onEndGame: () => void;
+  onEndParty: () => void;
 };
 
 export function PartyPauseModal({
   visible,
   onResume,
-  onEndGame,
+  onEndParty,
 }: PartyPauseModalProps) {
   return (
     <Modal
@@ -27,7 +27,7 @@ export function PartyPauseModal({
           </Text>
           <View style={styles.actions}>
             <Pressable
-              onPress={onEndGame}
+              onPress={onEndParty}
               style={[styles.btn, styles.btnEnd]}>
               <Text style={styles.btnText}>End Round</Text>
             </Pressable>

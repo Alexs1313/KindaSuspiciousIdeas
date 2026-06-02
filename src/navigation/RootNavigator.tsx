@@ -9,7 +9,7 @@ import {OnboardingScreen} from '../screens/OnboardingScreen';
 import {PartyResultsScreen} from '../screens/PartyResultsScreen';
 import {PartySetupScreen} from '../screens/PartySetupScreen';
 import {PartySituationScreen} from '../screens/PartySituationScreen';
-import {PartySpinScreen} from '../screens/PartySpinScreen';
+import {PartyCategoryPickerScreen} from '../screens/PartyCategoryPickerScreen';
 import {PartyVoteScreen} from '../screens/PartyVoteScreen';
 import {SavedCiphersScreen} from '../screens/SavedCiphersScreen';
 import {SplashScreen} from '../screens/SplashScreen';
@@ -55,8 +55,14 @@ export function RootNavigator() {
             <Stack.Screen name="StoryDetailScreen" component={StoryDetailScreen} />
             <Stack.Screen name="PartySetup" component={PartySetupScreen} />
             <Stack.Screen name="PartySetupScreen" component={PartySetupScreen} />
-            <Stack.Screen name="PartySpin" component={PartySpinScreen} />
-            <Stack.Screen name="PartySpinScreen" component={PartySpinScreen} />
+            <Stack.Screen
+              name="PartyCategoryPicker"
+              component={PartyCategoryPickerScreen}
+            />
+            <Stack.Screen
+              name="PartyCategoryPickerScreen"
+              component={PartyCategoryPickerScreen}
+            />
             <Stack.Screen
               name="PartySituation"
               component={PartySituationScreen}

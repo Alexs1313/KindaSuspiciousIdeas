@@ -1,19 +1,13 @@
 import React from 'react';
 import {Pressable, Share, StyleSheet, Text, View} from 'react-native';
 import LinearGradient from 'react-native-linear-gradient';
-import {useNavigation} from '@react-navigation/native';
 
 import {BackgroundScreen} from '../components/BackgroundScreen';
 import {stories} from '../data/stories';
 import {navigateRootScreen} from '../navigation/rootNavigation';
 
 export function StoriesScreen() {
-  const navigation = useNavigation<any>();
-
-  const shareStory = async (
-    title: string,
-    summary: string,
-  ) => {
+  const shareStory = async (title: string, summary: string) => {
     try {
       await Share.share({
         message: `${title}\n\n${summary}`,
@@ -33,8 +27,7 @@ export function StoriesScreen() {
 
         <View style={styles.cardList}>
           {stories.map(item => {
-            const accent =
-              item.accent;
+            const accent = item.accent;
 
             return (
               <View
@@ -42,8 +35,7 @@ export function StoriesScreen() {
                 style={[
                   styles.storyCardWrap,
                   {
-                    borderLeftColor:
-                      accent.color,
+                    borderLeftColor: accent.color,
                   },
                 ]}>
                 <LinearGradient
@@ -56,30 +48,23 @@ export function StoriesScreen() {
                       style={[
                         styles.tagPill,
                         {
-                          backgroundColor:
-                            accent.background,
-                          borderColor:
-                            accent.border,
+                          backgroundColor: accent.background,
+                          borderColor: accent.border,
                         },
                       ]}>
                       <Text
                         style={[
                           styles.tagText,
                           {
-                            color:
-                              accent.color,
+                            color: accent.color,
                           },
                         ]}>
                         {item.tag}
                       </Text>
                     </View>
 
-                    <Text style={styles.title}>
-                      {item.title}
-                    </Text>
-                    <Text style={styles.summary}>
-                      {item.summary}
-                    </Text>
+                    <Text style={styles.title}>{item.title}</Text>
+                    <Text style={styles.summary}>{item.summary}</Text>
 
                     <View style={styles.divider} />
 
@@ -96,8 +81,7 @@ export function StoriesScreen() {
                           style={[
                             styles.openText,
                             {
-                              color:
-                                accent.color,
+                              color: accent.color,
                             },
                           ]}>
                           Full story
@@ -106,8 +90,7 @@ export function StoriesScreen() {
                           style={[
                             styles.openArrow,
                             {
-                              color:
-                                accent.color,
+                              color: accent.color,
                             },
                           ]}>
                           ›
@@ -115,12 +98,7 @@ export function StoriesScreen() {
                       </Pressable>
 
                       <Pressable
-                        onPress={() =>
-                          shareStory(
-                            item.title,
-                            item.summary,
-                          )
-                        }
+                        onPress={() => shareStory(item.title, item.summary)}
                         style={styles.shareBtn}>
                         <Text style={styles.shareIcon}>↗</Text>
                       </Pressable>
@@ -134,7 +112,7 @@ export function StoriesScreen() {
       </View>
     </BackgroundScreen>
   );
-};
+}
 
 const styles = StyleSheet.create({
   root: {
@@ -251,4 +229,3 @@ const styles = StyleSheet.create({
     fontWeight: '700',
   },
 });
-

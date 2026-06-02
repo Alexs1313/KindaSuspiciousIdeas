@@ -14,55 +14,55 @@ import {
   type PartyCategoryId,
 } from '../data/partyCategories';
 import {
-  incrementGamesPlayed,
-  loadGamesPlayed,
-} from '../storage/gameStatsStorage';
+  incrementPartySessionsCount,
+  loadPartySessionsCount,
+} from '../storage/partyStatsStorage';
 
-export type PartyPlayerScore = {
-  playerName: string;
+export type PartyGuestScore = {
+  guestName: string;
   totalPoints: number;
   turnCount: number;
   voteSum: number;
 };
 
 type PartyState = {
-  players: string[];
+  guests: string[];
   totalRounds: number;
   currentRound: number;
-  currentPlayerIndex: number;
+  currentGuestIndex: number;
   currentVoterIndex: number;
   currentCategory: PartyCategory | null;
   currentSituation: string;
   currentTurnVotes: number[];
-  scores: PartyPlayerScore[];
+  scores: PartyGuestScore[];
   usedSituationKeys: string[];
-  gameFinished: boolean;
-  gamesPlayedCount: number;
-  reloadGamesPlayedCount: () => Promise<number>;
-  setupPlayers: (names: string[]) => void;
+  partyFinished: boolean;
+  partySessionsCount: number;
+  reloadPartySessionsCount: () => Promise<number>;
+  setupGuests: (names: string[]) => void;
   setupRounds: (rounds: number) => void;
-  startGame: () => void;
+  startParty: () => void;
   pickCategory: (
     categoryId: PartyCategoryId,
   ) => void;
   submitVote: (percent: number) => boolean;
-  resetGame: () => void;
-  currentPlayerName: () => string;
+  resetParty: () => void;
+  currentGuestName: () => string;
   currentDefenderName: () => string;
   voterCount: () => number;
-  isGameOver: () => boolean;
+  isPartyComplete: () => boolean;
 };
 
 const PartyContext =
   createContext<PartyState | null>(null);
 
-const DEFAULT_PLAYERS = ['Guest 1', 'Guest 2', 'Guest 3'];
+const DEFAULT_GUESTS = ['Guest 1', 'Guest 2', 'Guest 3'];
 
 function buildScores(
   names: string[],
-): PartyPlayerScore[] {
+): PartyGuestScore[] {
   return names.map(name => ({
-    playerName: name,
+    guestName: name,
     totalPoints: 0,
     turnCount: 0,
     voteSum: 0,
@@ -109,14 +109,14 @@ export function PartyProvider({
 }: {
   children: React.ReactNode;
 }) {
-  const [players, setPlayers] = useState(
-    DEFAULT_PLAYERS,
+  const [guests, setGuests] = useState(
+    DEFAULT_GUESTS,
   );
   const [totalRounds, setTotalRounds] =
     useState(3);
   const [currentRound, setCurrentRound] =
     useState(1);
-  const [currentPlayerIndex, setCurrentPlayerIndex] =
+  const [currentGuestIndex, setCurrentGuestIndex] =
     useState(0);
   const [currentVoterIndex, setCurrentVoterIndex] =
     useState(0);
@@ -127,47 +127,47 @@ export function PartyProvider({
   const [currentTurnVotes, setCurrentTurnVotes] =
     useState<number[]>([]);
   const [scores, setScores] = useState<
-    PartyPlayerScore[]
-  >(() => buildScores(DEFAULT_PLAYERS));
+    PartyGuestScore[]
+  >(() => buildScores(DEFAULT_GUESTS));
   const [usedSituationKeys, setUsedSituationKeys] =
     useState<string[]>([]);
-  const [gameFinished, setGameFinished] =
+  const [partyFinished, setPartyFinished] =
     useState(false);
-  const [gamesPlayedCount, setGamesPlayedCount] =
+  const [partySessionsCount, setPartySessionsCount] =
     useState(0);
-  const gameCountedRef = useRef(false);
+  const sessionCountedRef = useRef(false);
 
-  const reloadGamesPlayedCount = useCallback(async () => {
-    const count = await loadGamesPlayed();
-    setGamesPlayedCount(count);
+  const reloadPartySessionsCount = useCallback(async () => {
+    const count = await loadPartySessionsCount();
+    setPartySessionsCount(count);
     return count;
   }, []);
 
   useEffect(() => {
-    void reloadGamesPlayedCount();
-  }, [reloadGamesPlayedCount]);
+    void reloadPartySessionsCount();
+  }, [reloadPartySessionsCount]);
 
-  const finishPartyGame = useCallback(() => {
+  const finishParty = useCallback(() => {
     setCurrentCategory(null);
     setCurrentSituation('');
     setCurrentTurnVotes([]);
-    setGameFinished(true);
+    setPartyFinished(true);
 
-    if (gameCountedRef.current) {
+    if (sessionCountedRef.current) {
       return;
     }
-    gameCountedRef.current = true;
+    sessionCountedRef.current = true;
 
-    void incrementGamesPlayed().then(
+    void incrementPartySessionsCount().then(
       next => {
-        setGamesPlayedCount(next);
+        setPartySessionsCount(next);
       },
     );
   }, []);
 
-  const setupPlayers = useCallback(
+  const setupGuests = useCallback(
     (names: string[]) => {
-      setPlayers(names);
+      setGuests(names);
       setScores(
         buildScores(names),
       );
@@ -182,20 +182,20 @@ export function PartyProvider({
     [],
   );
 
-  const startGame = useCallback(() => {
+  const startParty = useCallback(() => {
     setCurrentRound(1);
-    setCurrentPlayerIndex(0);
+    setCurrentGuestIndex(0);
     setCurrentVoterIndex(0);
     setCurrentCategory(null);
     setCurrentSituation('');
     setCurrentTurnVotes([]);
     setUsedSituationKeys([]);
-    setGameFinished(false);
-    gameCountedRef.current = false;
+    setPartyFinished(false);
+    sessionCountedRef.current = false;
     setScores(
-      buildScores(players),
+      buildScores(guests),
     );
-  }, [players]);
+  }, [guests]);
 
   const pickCategory = useCallback(
     (categoryId: PartyCategoryId) => {
@@ -227,19 +227,19 @@ export function PartyProvider({
   );
 
   const advanceTurn = useCallback(() => {
-    const nextPlayerIndex =
-      currentPlayerIndex + 1;
+    const nextGuestIndex =
+      currentGuestIndex + 1;
 
-    if (nextPlayerIndex >= players.length) {
+    if (nextGuestIndex >= guests.length) {
       const nextRound = currentRound + 1;
       if (nextRound > totalRounds) {
-        finishPartyGame();
+        finishParty();
         return;
       }
       setCurrentRound(nextRound);
-      setCurrentPlayerIndex(0);
+      setCurrentGuestIndex(0);
     } else {
-      setCurrentPlayerIndex(nextPlayerIndex);
+      setCurrentGuestIndex(nextGuestIndex);
     }
 
     setCurrentCategory(null);
@@ -247,24 +247,24 @@ export function PartyProvider({
     setCurrentTurnVotes([]);
     setCurrentVoterIndex(0);
   }, [
-    currentPlayerIndex,
+    currentGuestIndex,
     currentRound,
-    finishPartyGame,
-    players.length,
+    finishParty,
+    guests.length,
     totalRounds,
   ]);
 
   const submitVote = useCallback(
     (percent: number) => {
-      const defenderIndex = currentPlayerIndex;
+      const defenderIndex = currentGuestIndex;
       const defenderName =
-        players[defenderIndex];
+        guests[defenderIndex];
       const updatedVotes = [
         ...currentTurnVotes,
         percent,
       ];
 
-      const voters = players.filter(
+      const voters = guests.filter(
         (_, index) =>
           index !== defenderIndex,
       );
@@ -288,7 +288,7 @@ export function PartyProvider({
       setScores(prev =>
         prev.map(item => {
           if (
-            item.playerName !==
+            item.guestName !==
             defenderName
           ) {
             return item;
@@ -309,11 +309,11 @@ export function PartyProvider({
 
       const isLastTurn =
         currentRound === totalRounds &&
-        currentPlayerIndex ===
-          players.length - 1;
+        currentGuestIndex ===
+          guests.length - 1;
 
       if (isLastTurn) {
-        finishPartyGame();
+        finishParty();
         return true;
       }
 
@@ -322,101 +322,101 @@ export function PartyProvider({
     },
     [
       advanceTurn,
-      currentPlayerIndex,
+      currentGuestIndex,
       currentRound,
       currentTurnVotes,
-      finishPartyGame,
-      players,
+      finishParty,
+      guests,
       totalRounds,
     ],
   );
 
-  const resetGame = useCallback(() => {
-    setPlayers(DEFAULT_PLAYERS);
+  const resetParty = useCallback(() => {
+    setGuests(DEFAULT_GUESTS);
     setTotalRounds(3);
     setCurrentRound(1);
-    setCurrentPlayerIndex(0);
+    setCurrentGuestIndex(0);
     setCurrentVoterIndex(0);
     setCurrentCategory(null);
     setCurrentSituation('');
     setCurrentTurnVotes([]);
     setUsedSituationKeys([]);
-    setGameFinished(false);
-    gameCountedRef.current = false;
+    setPartyFinished(false);
+    sessionCountedRef.current = false;
     setScores(
-      buildScores(DEFAULT_PLAYERS),
+      buildScores(DEFAULT_GUESTS),
     );
   }, []);
 
-  const currentPlayerName = useCallback(
-    () => players[currentPlayerIndex] ?? '',
-    [currentPlayerIndex, players],
+  const currentGuestName = useCallback(
+    () => guests[currentGuestIndex] ?? '',
+    [currentGuestIndex, guests],
   );
 
   const currentDefenderName = useCallback(
-    () => players[currentPlayerIndex] ?? '',
-    [currentPlayerIndex, players],
+    () => guests[currentGuestIndex] ?? '',
+    [currentGuestIndex, guests],
   );
 
   const voterCount = useCallback(
-    () => Math.max(players.length - 1, 1),
-    [players.length],
+    () => Math.max(guests.length - 1, 1),
+    [guests.length],
   );
 
-  const isGameOver = useCallback(
-    () => gameFinished,
-    [gameFinished],
+  const isPartyComplete = useCallback(
+    () => partyFinished,
+    [partyFinished],
   );
 
   const value = useMemo(
     () => ({
-      players,
+      guests,
       totalRounds,
       currentRound,
-      currentPlayerIndex,
+      currentGuestIndex,
       currentVoterIndex,
       currentCategory,
       currentSituation,
       currentTurnVotes,
       scores,
       usedSituationKeys,
-      gameFinished,
-      gamesPlayedCount,
-      reloadGamesPlayedCount,
-      setupPlayers,
+      partyFinished,
+      partySessionsCount,
+      reloadPartySessionsCount,
+      setupGuests,
       setupRounds,
-      startGame,
+      startParty,
       pickCategory,
       submitVote,
-      resetGame,
-      currentPlayerName,
+      resetParty,
+      currentGuestName,
       currentDefenderName,
       voterCount,
-      isGameOver,
+      isPartyComplete,
     }),
     [
       currentCategory,
-      currentPlayerIndex,
+      currentGuestIndex,
       currentRound,
       currentSituation,
       currentTurnVotes,
       currentVoterIndex,
       currentDefenderName,
-      currentPlayerName,
-      isGameOver,
+      currentGuestName,
+      isPartyComplete,
       pickCategory,
-      players,
-      resetGame,
+      guests,
+      resetParty,
       scores,
-      setupPlayers,
+      setupGuests,
       setupRounds,
-      startGame,
+      startParty,
       submitVote,
       totalRounds,
       usedSituationKeys,
-      gameFinished,
-      gamesPlayedCount,
-      reloadGamesPlayedCount,
+      partyFinished,
+      partySessionsCount,
+      reloadPartySessionsCount,
       voterCount,
     ],
   );

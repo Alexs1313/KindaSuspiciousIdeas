@@ -7,18 +7,18 @@ import {BackgroundScreen} from '../components/BackgroundScreen';
 import {useParty} from '../context/PartyContext';
 import {navigateRootScreen} from '../navigation/rootNavigation';
 
-const minPlayers = 2;
-const maxPlayers = 8;
+const minGuests = 2;
+const maxGuests = 8;
 
 export function PartySetupScreen() {
   const navigation = useNavigation<any>();
   const {
-    setupPlayers,
+    setupGuests,
     setupRounds,
-    startGame,
+    startParty,
   } = useParty();
 
-  const [playerNames, setPlayerNames] = useState([
+  const [guestNames, setGuestNames] = useState([
     'Guest 1',
     'Guest 2',
     'Guest 3',
@@ -29,15 +29,15 @@ export function PartySetupScreen() {
   const roundOptions = useMemo(
     () =>
       Array.from(
-        {length: playerNames.length},
+        {length: guestNames.length},
         (_, index) => index + 1,
       ),
-    [playerNames.length],
+    [guestNames.length],
   );
 
   const canStart =
-    playerNames.length >= minPlayers &&
-    playerNames.every(
+    guestNames.length >= minGuests &&
+    guestNames.every(
       name => name.trim().length > 0,
     );
 
@@ -45,7 +45,7 @@ export function PartySetupScreen() {
     index: number,
     value: string,
   ) => {
-    setPlayerNames(prev =>
+    setGuestNames(prev =>
       prev.map((name, itemIndex) =>
         itemIndex === index
           ? value
@@ -54,28 +54,28 @@ export function PartySetupScreen() {
     );
   };
 
-  const addPlayer = () => {
-    if (playerNames.length >= maxPlayers) {
+  const addGuest = () => {
+    if (guestNames.length >= maxGuests) {
       return;
     }
-    setPlayerNames(prev => [
+    setGuestNames(prev => [
       ...prev,
       `Guest ${prev.length + 1}`,
     ]);
   };
 
-  const removePlayer = (index: number) => {
-    if (playerNames.length <= minPlayers) {
+  const removeGuest = (index: number) => {
+    if (guestNames.length <= minGuests) {
       return;
     }
-    setPlayerNames(prev =>
+    setGuestNames(prev =>
       prev.filter(
         (_, itemIndex) =>
           itemIndex !== index,
       ),
     );
     setSelectedRounds(prev =>
-      Math.min(prev, playerNames.length - 1),
+      Math.min(prev, guestNames.length - 1),
     );
   };
 
@@ -83,13 +83,13 @@ export function PartySetupScreen() {
     if (!canStart) {
       return;
     }
-    const trimmed = playerNames.map(
+    const trimmed = guestNames.map(
       name => name.trim(),
     );
-    setupPlayers(trimmed);
+    setupGuests(trimmed);
     setupRounds(selectedRounds);
-    startGame();
-    navigateRootScreen('PartySpin');
+    startParty();
+    navigateRootScreen('PartyCategoryPicker');
   };
 
   return (
@@ -102,23 +102,23 @@ export function PartySetupScreen() {
             <Text style={styles.backIcon}>‹</Text>
           </Pressable>
           <View style={styles.topTitles}>
-            <Text style={styles.topTitle}>Who's Playing?</Text>
+            <Text style={styles.topTitle}>Who's Joining?</Text>
             <Text style={styles.topSubtitle}>2–8 guests</Text>
           </View>
         </View>
 
-        <View style={styles.playerList}>
-          {playerNames.map(
+        <View style={styles.guestList}>
+          {guestNames.map(
             (name, index) => (
               <View
-                key={`player-${index}`}
-                style={styles.playerRow}>
+                key={`guest-${index}`}
+                style={styles.guestRow}>
                 <LinearGradient
                   colors={['#2EB3FF', '#141D3A'] as unknown as string[]}
                   start={{x: 0, y: 0}}
                   end={{x: 1, y: 1}}
-                  style={styles.playerBadge}>
-                  <Text style={styles.playerBadgeText}>
+                  style={styles.guestBadge}>
+                  <Text style={styles.guestBadgeText}>
                     {index + 1}
                   </Text>
                 </LinearGradient>
@@ -132,11 +132,11 @@ export function PartySetupScreen() {
                   }
                   placeholder={`Guest ${index + 1}`}
                   placeholderTextColor="#4A5478"
-                  style={styles.playerInput}
+                  style={styles.guestInput}
                 />
                 <Pressable
                   onPress={() =>
-                    removePlayer(index)
+                    removeGuest(index)
                   }
                   style={styles.removeBtn}>
                   <Text style={styles.removeText}>−</Text>
@@ -147,7 +147,7 @@ export function PartySetupScreen() {
         </View>
 
         <Pressable
-          onPress={addPlayer}
+          onPress={addGuest}
           style={styles.addBtn}>
           <Text style={styles.addText}>+</Text>
         </Pressable>
@@ -159,7 +159,7 @@ export function PartySetupScreen() {
           style={styles.roundsCard}>
           <View style={styles.roundsCardInner}>
             <Text style={styles.roundsLabel}>
-              {playerNames.length} GUESTS · ROUNDS
+              {guestNames.length} GUESTS · ROUNDS
             </Text>
             <Text style={styles.roundsValue}>
               {selectedRounds}
@@ -248,28 +248,28 @@ const styles = StyleSheet.create({
     fontSize: 14,
     color: '#7D88AD',
   },
-  playerList: {
+  guestList: {
     gap: 12,
     marginBottom: 16,
   },
-  playerRow: {
+  guestRow: {
     flexDirection: 'row',
     alignItems: 'center',
     gap: 10,
   },
-  playerBadge: {
+  guestBadge: {
     width: 36,
     height: 36,
     borderRadius: 10,
     alignItems: 'center',
     justifyContent: 'center',
   },
-  playerBadgeText: {
+  guestBadgeText: {
     fontFamily: 'Manrope-Bold',
     fontSize: 14,
     color: '#FFFFFF',
   },
-  playerInput: {
+  guestInput: {
     flex: 1,
     height: 48,
     borderRadius: 12,

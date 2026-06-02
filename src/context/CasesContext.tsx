@@ -291,7 +291,7 @@ export function CasesProvider({
         ],
         verdict: 'suspicious',
         realOutcome:
-          'A child was pressing the button as a prank and running down the stairs before the elevator arrived. The elevator was not broken. The pattern, fingerprints, and timing all pointed to playful mischief rather than a technical issue.',
+          'A child was pressing the button as a prank and running down the stairs before the elevator arrived. The elevator was not broken. The pattern, fingerprints, and timing all pointed to lighthearted mischief rather than a technical issue.',
       },
       {
         caseId: 'C10',
@@ -359,7 +359,7 @@ export function CasesProvider({
           'The forgotten rule directly affected their winning move.',
           'They hesitated before making the move.',
           'Another guest asked, “Is that allowed?” and they quickly said yes.',
-          'They remembered the rule immediately after the win was confirmed.',
+          'They remembered the rule immediately after the outcome was confirmed.',
         ],
         statements: [
           {speaker: 'Guest', text: 'I honestly forgot in the moment.'},
@@ -369,7 +369,7 @@ export function CasesProvider({
         ],
         verdict: 'suspicious',
         realOutcome:
-          'They knew the rule but ignored it because it helped them win. They only admitted it after the result was secured. The hesitation and earlier explanation made the “forgot” excuse weak.',
+          'They knew the rule but ignored it because it helped them succeed. They only admitted it after the result was secured. The hesitation and earlier explanation made the “forgot” excuse weak.',
       },
       {
         caseId: 'C13',

@@ -6,7 +6,7 @@ export type RootStackParamList = {
   CaseClosed: {caseId: string};
   StoryDetail: {storyId: string};
   PartySetup: undefined;
-  PartySpin: undefined;
+  PartyCategoryPicker: undefined;
   PartySituation: undefined;
   PartyVote: undefined;
   PartyResults: undefined;
@@ -16,7 +16,7 @@ export type RootStackParamList = {
   CaseClosedScreen: {caseId: string};
   StoryDetailScreen: {storyId: string};
   PartySetupScreen: undefined;
-  PartySpinScreen: undefined;
+  PartyCategoryPickerScreen: undefined;
   PartySituationScreen: undefined;
   PartyVoteScreen: undefined;
   PartyResultsScreen: undefined;

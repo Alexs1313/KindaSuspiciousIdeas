@@ -4,17 +4,17 @@ workflows:
     max_build_duration: 120
     instance_type: mac_mini_m2
     integrations:
-      app_store_connect: TheKSlkindasuspiciousAPIKey
+      app_store_connect: MiranTuncelAPIKey
     environment:
       xcode: '26.0'
       ios_signing:
         distribution_type: app_store
-        bundle_identifier: com.theKSl.kinda.suspicious
+        bundle_identifier: com.ddjkkjsdl.alaspwd
       vars:
-        BUNDLE_ID: com.theKSl.kinda.suspicious
+        BUNDLE_ID: com.ddjkkjsdl.alaspwd
         XCODE_WORKSPACE: KindaSuspiciousIdeas.xcworkspace
         XCODE_SCHEME: KindaSuspiciousIdeas
-        APP_STORE_APPLE_ID: 6774977158
+        APP_STORE_APPLE_ID: 6775801748
     scripts:
       - name: Install npm dependencies
         script: |

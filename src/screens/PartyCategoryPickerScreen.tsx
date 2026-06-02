@@ -20,13 +20,13 @@ import {
 } from '../context/PartyContext';
 import type {PartyCategoryId} from '../data/partyCategories';
 
-const wheelSize = 280;
+const PICKER_RING_SIZE = 280;
 const segmentCount =
   partyCategories.length;
 const segmentAngle = 360 / segmentCount;
-const labelRadius = wheelSize * 0.33;
+const labelRadius = PICKER_RING_SIZE * 0.33;
 
-export function WheelLabel({
+export function PickerSegmentLabel({
   label,
   textColor,
   index,
@@ -44,7 +44,7 @@ export function WheelLabel({
   return (
     <View
       style={[
-        styles.wheelLabelSlot,
+        styles.pickerSegmentSlot,
         {
           transform: [
             {rotate: `${angleDeg}deg`},
@@ -56,48 +56,48 @@ export function WheelLabel({
       <Text
         numberOfLines={2}
         style={[
-          styles.wheelLabelText,
+          styles.pickerSegmentText,
           {color: textColor},
         ]}>
         {label}
       </Text>
     </View>
   );
-};
+}
 
-export function PartySpinScreen() {
+export function PartyCategoryPickerScreen() {
   const navigation = useNavigation<any>();
   const {
     currentRound,
     totalRounds,
-    currentPlayerName,
+    currentGuestName,
     pickCategory,
     currentCategory,
-    resetGame,
+    resetParty,
   } = useParty();
 
   const [pauseVisible, setPauseVisible] =
     useState(false);
-  const [spinning, setSpinning] = useState(false);
+  const [isSelecting, setIsSelecting] = useState(false);
   const [selectedIndex, setSelectedIndex] =
     useState<number | null>(null);
 
   const rotation = useRef(new Animated.Value(0)).current;
   const rotationDeg = useRef(0);
 
-  const spin = () => {
-    if (spinning) {
+  const runCategorySelection = () => {
+    if (isSelecting) {
       return;
     }
 
-    setSpinning(true);
+    setIsSelecting(true);
     const targetIndex = Math.floor(
       Math.random() * segmentCount,
     );
-    const extraSpins = 5;
+    const extraRotations = 5;
     const targetAngle =
       rotationDeg.current +
-      extraSpins * 360 +
+      extraRotations * 360 +
       (segmentCount - targetIndex) *
         segmentAngle;
 
@@ -109,7 +109,7 @@ export function PartySpinScreen() {
     }).start(() => {
       rotationDeg.current = targetAngle;
       setSelectedIndex(targetIndex);
-      setSpinning(false);
+      setIsSelecting(false);
       pickCategory(
         partyCategories[targetIndex]
           .categoryId as PartyCategoryId,
@@ -122,7 +122,7 @@ export function PartySpinScreen() {
       ? partyCategories[selectedIndex]
       : currentCategory;
 
-  const spinInterpolate = rotation.interpolate({
+  const rotationInterpolate = rotation.interpolate({
     inputRange: [0, 36000],
     outputRange: ['0deg', '36000deg'],
   });
@@ -142,40 +142,40 @@ export function PartySpinScreen() {
               {totalRounds}
             </Text>
             <Text style={styles.turnTitle}>
-              {currentPlayerName()}'s turn
+              {currentGuestName()}'s turn
             </Text>
           </View>
           <View style={styles.topSpacer} />
         </View>
 
         <Pressable
-          onPress={spin}
-          disabled={spinning}
-          style={styles.spinLabelBtn}>
-          <Text style={styles.spinLabelText}>
+          onPress={runCategorySelection}
+          disabled={isSelecting}
+          style={styles.categoryPromptBtn}>
+          <Text style={styles.categoryPromptText}>
             Pick a category
           </Text>
         </Pressable>
 
-        <View style={styles.wheelWrap}>
+        <View style={styles.pickerRingWrap}>
           <Text style={styles.pointer}>▼</Text>
-          <View style={styles.wheelStage}>
+          <View style={styles.pickerRingStage}>
             <Animated.View
               style={[
-                styles.wheelRotate,
-                {transform: [{rotate: spinInterpolate}]},
+                styles.pickerRingAnimated,
+                {transform: [{rotate: rotationInterpolate}]},
               ]}>
               <Image
-                source={images.wheel}
-                style={styles.wheelImage}
+                source={images.categoryPickerRing}
+                style={styles.pickerRingImage}
                 resizeMode="contain"
               />
               <View
                 pointerEvents="none"
-                style={styles.wheelLabels}>
+                style={styles.pickerRingLabels}>
                 {partyCategories.map(
                   (category, index) => (
-                    <WheelLabel
+                    <PickerSegmentLabel
                       key={category.categoryId}
                       index={index}
                       label={
@@ -190,21 +190,21 @@ export function PartySpinScreen() {
               </View>
             </Animated.View>
             <Pressable
-              onPress={spin}
+              onPress={runCategorySelection}
               disabled={
-                spinning || !!activeCategory
+                isSelecting || !!activeCategory
               }
               style={[
-                styles.wheelCenter,
+                styles.pickerRingCenter,
                 activeCategory &&
-                  !spinning &&
-                  styles.wheelCenterDone,
+                  !isSelecting &&
+                  styles.pickerRingCenterDone,
               ]}>
-              {!spinning && !activeCategory ? (
-                <Text style={styles.wheelCenterText}>PICK</Text>
+              {!isSelecting && !activeCategory ? (
+                <Text style={styles.pickerRingCenterText}>PICK</Text>
               ) : null}
-              {!spinning && activeCategory ? (
-                <Text style={styles.wheelCenterCheck}>✓</Text>
+              {!isSelecting && activeCategory ? (
+                <Text style={styles.pickerRingCenterCheck}>✓</Text>
               ) : null}
             </Pressable>
           </View>
@@ -228,7 +228,7 @@ export function PartySpinScreen() {
           <Text style={styles.hint}>Tap the center to pick</Text>
         )}
 
-        {activeCategory && !spinning ? (
+        {activeCategory && !isSelecting ? (
           <Pressable
             onPress={() => navigateRootScreen('PartySituation')}
             style={styles.revealBtn}>
@@ -242,15 +242,15 @@ export function PartySpinScreen() {
       <PartyPauseModal
         visible={pauseVisible}
         onResume={() => setPauseVisible(false)}
-        onEndGame={() => {
+        onEndParty={() => {
           setPauseVisible(false);
-          resetGame();
+          resetParty();
           resetToMain();
         }}
       />
     </BackgroundScreen>
   );
-};
+}
 
 const styles = StyleSheet.create({
   root: {
@@ -299,7 +299,7 @@ const styles = StyleSheet.create({
     color: '#FFFFFF',
     textAlign: 'center',
   },
-  spinLabelBtn: {
+  categoryPromptBtn: {
     paddingHorizontal: 16,
     paddingVertical: 8,
     borderRadius: 999,
@@ -308,15 +308,15 @@ const styles = StyleSheet.create({
     marginBottom: 16,
     marginTop: 50,
   },
-  spinLabelText: {
+  categoryPromptText: {
     fontFamily: 'Manrope-Bold',
     fontSize: 12,
     letterSpacing: 0.5,
     textTransform: 'uppercase',
     color: '#2EB3FF',
   },
-  wheelWrap: {
-    width: wheelSize,
+  pickerRingWrap: {
+    width: PICKER_RING_SIZE,
     alignItems: 'center',
     marginBottom: 20,
   },
@@ -327,40 +327,40 @@ const styles = StyleSheet.create({
     zIndex: 2,
     top: 20,
   },
-  wheelStage: {
-    width: wheelSize,
-    height: wheelSize,
+  pickerRingStage: {
+    width: PICKER_RING_SIZE,
+    height: PICKER_RING_SIZE,
     alignItems: 'center',
     justifyContent: 'center',
   },
-  wheelRotate: {
-    width: wheelSize,
-    height: wheelSize,
+  pickerRingAnimated: {
+    width: PICKER_RING_SIZE,
+    height: PICKER_RING_SIZE,
     alignItems: 'center',
     justifyContent: 'center',
   },
-  wheelImage: {
-    width: wheelSize,
-    height: wheelSize,
+  pickerRingImage: {
+    width: PICKER_RING_SIZE,
+    height: PICKER_RING_SIZE,
   },
-  wheelLabels: {
+  pickerRingLabels: {
     ...StyleSheet.absoluteFillObject,
     alignItems: 'center',
     justifyContent: 'center',
   },
-  wheelLabelSlot: {
+  pickerSegmentSlot: {
     position: 'absolute',
     width: 78,
     alignItems: 'center',
     justifyContent: 'center',
   },
-  wheelLabelText: {
+  pickerSegmentText: {
     fontFamily: 'Manrope-Bold',
     fontSize: 10,
     lineHeight: 12,
     textAlign: 'center',
   },
-  wheelCenter: {
+  pickerRingCenter: {
     position: 'absolute',
     width: 72,
     height: 72,
@@ -371,15 +371,15 @@ const styles = StyleSheet.create({
     borderWidth: 3,
     borderColor: '#FFFFFF',
   },
-  wheelCenterDone: {
+  pickerRingCenterDone: {
     backgroundColor: '#4ADE80',
   },
-  wheelCenterText: {
+  pickerRingCenterText: {
     fontFamily: 'Manrope-ExtraBold',
     fontSize: 14,
     color: '#1A2347',
   },
-  wheelCenterCheck: {
+  pickerRingCenterCheck: {
     fontFamily: 'Manrope-ExtraBold',
     fontSize: 22,
     color: '#1A2347',
@@ -427,4 +427,3 @@ const styles = StyleSheet.create({
     color: '#1A2347',
   },
 });
-

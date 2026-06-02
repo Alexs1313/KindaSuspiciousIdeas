@@ -12,8 +12,8 @@ export function SettingsScreen() {
   const {cases, progressById} =
     useCases();
   const {
-    gamesPlayedCount,
-    reloadGamesPlayedCount,
+    partySessionsCount,
+    reloadPartySessionsCount,
   } = useParty();
 
   const stats = useMemo(
@@ -27,8 +27,8 @@ export function SettingsScreen() {
 
   useFocusEffect(
     useCallback(() => {
-      void reloadGamesPlayedCount();
-    }, [reloadGamesPlayedCount]),
+      void reloadPartySessionsCount();
+    }, [reloadPartySessionsCount]),
   );
 
   return (
@@ -96,14 +96,14 @@ export function SettingsScreen() {
           </View>
         </View>
 
-        <View style={styles.gamesCard}>
-          <Text style={styles.gamesIcon}>🏁</Text>
-          <View style={styles.gamesTextWrap}>
-            <Text style={styles.gamesLabel}>
-              Total Rounds Played
+        <View style={styles.partyStatsCard}>
+          <Text style={styles.partyStatsIcon}>🏁</Text>
+          <View style={styles.partyStatsTextWrap}>
+            <Text style={styles.partyStatsLabel}>
+              Total Party Sessions
             </Text>
-            <Text style={styles.gamesValue}>
-              {gamesPlayedCount}
+            <Text style={styles.partyStatsValue}>
+              {partySessionsCount}
             </Text>
           </View>
         </View>
@@ -117,7 +117,7 @@ export function SettingsScreen() {
           style={styles.aboutCard}>
           <View style={styles.aboutCardInner}>
             <Text style={styles.aboutText}>
-              A playful detective notebook for the slightly-unhinged
+              A detective notebook for the slightly-unhinged
               observations of modern life. Read cases. Try party mode. Crack codes.
               Trust your gut. Or don't.
             </Text>
@@ -225,7 +225,7 @@ const styles = StyleSheet.create({
     borderRadius: 4,
     backgroundColor: '#2EB3FF',
   },
-  gamesCard: {
+  partyStatsCard: {
     flexDirection: 'row',
     alignItems: 'center',
     gap: 12,
@@ -236,19 +236,19 @@ const styles = StyleSheet.create({
     padding: 15,
     marginBottom: 32,
   },
-  gamesIcon: {
+  partyStatsIcon: {
     fontSize: 28,
     lineHeight: 42,
   },
-  gamesTextWrap: {
+  partyStatsTextWrap: {
     gap: 2,
   },
-  gamesLabel: {
+  partyStatsLabel: {
     fontFamily: 'Manrope-Medium',
     fontSize: 12,
     color: '#8892B0',
   },
-  gamesValue: {
+  partyStatsValue: {
     fontFamily: 'BowlbyOne-Regular',
     fontSize: 22,
     lineHeight: 33,

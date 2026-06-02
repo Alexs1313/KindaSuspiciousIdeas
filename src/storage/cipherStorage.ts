@@ -11,7 +11,8 @@ export type SavedCipher = {
   savedAt: string;
 };
 
-const SAVED_CIPHERS_KEY = 'ksi:saved-ciphers';
+const SAVED_CIPHERS_KEY = 'kinda:saved-ciphers';
+const LEGACY_KSI_SAVED_CIPHERS_KEY = 'ksi:saved-ciphers';
 const LEGACY_SAVED_CIPHERS_KEY = 'suspiciouskinddaIdeasSavedCiphers';
 
 type LegacySavedCipher = {
@@ -42,7 +43,12 @@ export const loadSavedCiphers = async () => {
   let raw = await AsyncStorage.getItem(SAVED_CIPHERS_KEY);
 
   if (!raw) {
-    const legacyRaw = await AsyncStorage.getItem(LEGACY_SAVED_CIPHERS_KEY);
+    const legacyKsiRaw = await AsyncStorage.getItem(
+      LEGACY_KSI_SAVED_CIPHERS_KEY,
+    );
+    const legacyRaw =
+      legacyKsiRaw ??
+      (await AsyncStorage.getItem(LEGACY_SAVED_CIPHERS_KEY));
     if (!legacyRaw) {
       return [] as SavedCipher[];
     }
@@ -54,7 +60,10 @@ export const loadSavedCiphers = async () => {
         .filter((entry): entry is SavedCipher => entry != null);
 
       await AsyncStorage.setItem(SAVED_CIPHERS_KEY, JSON.stringify(migrated));
-      await AsyncStorage.removeItem(LEGACY_SAVED_CIPHERS_KEY);
+      await AsyncStorage.multiRemove([
+        LEGACY_KSI_SAVED_CIPHERS_KEY,
+        LEGACY_SAVED_CIPHERS_KEY,
+      ]);
       return migrated;
     } catch {
       return [] as SavedCipher[];

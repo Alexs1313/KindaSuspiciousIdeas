@@ -7,17 +7,15 @@ import {
   View,
 } from 'react-native';
 import LinearGradient from 'react-native-linear-gradient';
-import {useNavigation} from '@react-navigation/native';
 
 import {BackgroundScreen} from '../components/BackgroundScreen';
 import {useParty} from '../context/PartyContext';
-import {navigateRootScreen, replaceRootScreen} from '../navigation/rootNavigation';
+import {replaceRootScreen} from '../navigation/rootNavigation';
 
 export function PartyVoteScreen() {
-  const navigation = useNavigation<any>();
   const {
-    players,
-    currentPlayerIndex,
+    guests,
+    currentGuestIndex,
     currentVoterIndex,
     currentDefenderName,
     submitVote,
@@ -28,22 +26,15 @@ export function PartyVoteScreen() {
   const [trackWidth, setTrackWidth] = useState(0);
 
   const voters = useMemo(
-    () =>
-      players.filter(
-        (_, index) =>
-          index !== currentPlayerIndex,
-      ),
-    [currentPlayerIndex, players],
+    () => guests.filter((_, index) => index !== currentGuestIndex),
+    [currentGuestIndex, guests],
   );
 
-  const currentVoterName =
-    voters[currentVoterIndex] ?? '';
+  const currentVoterName = voters[currentVoterIndex] ?? '';
   const defenderName = currentDefenderName();
   const totalVoters = voterCount();
 
-  const onTrackLayout = (
-    event: LayoutChangeEvent,
-  ) => {
+  const onTrackLayout = (event: LayoutChangeEvent) => {
     setTrackWidth(event.nativeEvent.layout.width);
   };
 
@@ -51,19 +42,12 @@ export function PartyVoteScreen() {
     if (trackWidth <= 0) {
       return;
     }
-    const clamped = Math.max(
-      0,
-      Math.min(x, trackWidth),
-    );
-    setPercent(
-      Math.round((clamped / trackWidth) * 100),
-    );
+    const clamped = Math.max(0, Math.min(x, trackWidth));
+    setPercent(Math.round((clamped / trackWidth) * 100));
   };
 
   const onNext = () => {
-    const finished = submitVote(
-      percent,
-    );
+    const finished = submitVote(percent);
     setPercent(70);
 
     if (finished) {
@@ -73,45 +57,34 @@ export function PartyVoteScreen() {
 
     const nextVoterIndex = currentVoterIndex + 1;
     if (nextVoterIndex >= totalVoters) {
-      replaceRootScreen('PartySpin');
+      replaceRootScreen('PartyCategoryPicker');
     }
   };
 
-  const thumbLeft =
-    trackWidth > 0
-      ? (percent / 100) * trackWidth - 12
-      : 0;
+  const thumbLeft = trackWidth > 0 ? (percent / 100) * trackWidth - 12 : 0;
 
   return (
     <BackgroundScreen>
       <View style={styles.root}>
         <Text style={styles.title}>Vote</Text>
-        <Text style={styles.subtitle}>
-          How convincing was {defenderName}?
-        </Text>
+        <Text style={styles.subtitle}>How convincing was {defenderName}?</Text>
 
         <View style={styles.progressDots}>
-          {Array.from({length: totalVoters}).map(
-            (_, index) => (
-              <View
-                key={index}
-                style={[
-                  styles.dot,
-                  index <= currentVoterIndex &&
-                    styles.dotActive,
-                ]}
-              />
-            ),
-          )}
+          {Array.from({length: totalVoters}).map((_, index) => (
+            <View
+              key={index}
+              style={[
+                styles.dot,
+                index <= currentVoterIndex && styles.dotActive,
+              ]}
+            />
+          ))}
         </View>
 
         <Text style={styles.voterLabel}>
-          Voter {currentVoterIndex + 1} of{' '}
-          {totalVoters}
+          Voter {currentVoterIndex + 1} of {totalVoters}
         </Text>
-        <Text style={styles.voterName}>
-          {currentVoterName}
-        </Text>
+        <Text style={styles.voterName}>{currentVoterName}</Text>
         <Text style={styles.passHint}>Pass the phone</Text>
 
         <LinearGradient
@@ -127,11 +100,7 @@ export function PartyVoteScreen() {
 
             <Pressable
               onLayout={onTrackLayout}
-              onPress={event =>
-                setFromPosition(
-                  event.nativeEvent.locationX,
-                )
-              }
+              onPress={event => setFromPosition(event.nativeEvent.locationX)}
               style={styles.trackWrap}>
               <LinearGradient
                 colors={['#FF5A6E', '#F7C948', '#4ADE80']}
@@ -139,12 +108,7 @@ export function PartyVoteScreen() {
                 end={{x: 1, y: 0.5}}
                 style={styles.track}
               />
-              <View
-                style={[
-                  styles.thumb,
-                  {left: Math.max(0, thumbLeft)},
-                ]}
-              />
+              <View style={[styles.thumb, {left: Math.max(0, thumbLeft)}]} />
             </Pressable>
           </View>
         </LinearGradient>
@@ -155,22 +119,18 @@ export function PartyVoteScreen() {
               key={preset}
               onPress={() => setPercent(preset)}
               style={styles.presetBtn}>
-              <Text style={styles.presetText}>
-                {preset} %
-              </Text>
+              <Text style={styles.presetText}>{preset} %</Text>
             </Pressable>
           ))}
         </View>
 
-        <Pressable
-          onPress={onNext}
-          style={styles.nextBtn}>
+        <Pressable onPress={onNext} style={styles.nextBtn}>
           <Text style={styles.nextText}>Next</Text>
         </Pressable>
       </View>
     </BackgroundScreen>
   );
-};
+}
 
 const styles = StyleSheet.create({
   root: {
@@ -295,4 +255,3 @@ const styles = StyleSheet.create({
     color: '#1A2347',
   },
 });
-

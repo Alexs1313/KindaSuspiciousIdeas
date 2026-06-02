@@ -321,7 +321,7 @@
 					"-ObjC",
 					"-lc++",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = com.theKSl.kinda.suspicious;
+				PRODUCT_BUNDLE_IDENTIFIER = com.ddjkkjsdl.alaspwd;
 				PRODUCT_NAME = KindaSuspiciousIdeas;
 				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
 				SUPPORTS_MACCATALYST = NO;
@@ -353,7 +353,7 @@
 					"-ObjC",
 					"-lc++",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = com.theKSl.kinda.suspicious;
+				PRODUCT_BUNDLE_IDENTIFIER = com.ddjkkjsdl.alaspwd;
 				PRODUCT_NAME = KindaSuspiciousIdeas;
 				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
 				SUPPORTS_MACCATALYST = NO;

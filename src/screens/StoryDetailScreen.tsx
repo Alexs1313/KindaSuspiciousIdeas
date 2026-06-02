@@ -22,15 +22,10 @@ type StoryDetailRoute = {
 export function StoryDetailScreen() {
   const navigation = useNavigation<any>();
   const route = useRoute<StoryDetailRoute>();
-  const storyId =
-    route.params.storyId;
+  const storyId = route.params.storyId;
 
   const story = useMemo(
-    () =>
-      stories.find(
-        item =>
-          item.storyId === storyId,
-      ),
+    () => stories.find(item => item.storyId === storyId),
     [storyId],
   );
 
@@ -45,9 +40,7 @@ export function StoryDetailScreen() {
       await Share.share({
         message: `${story.title}\n\n${story.body}`,
       });
-    } catch {
-      // user dismissed share sheet
-    }
+    } catch {}
   };
 
   return (
@@ -67,9 +60,7 @@ export function StoryDetailScreen() {
 
             <Text style={styles.topTitle}>Strange Story</Text>
 
-            <Pressable
-              onPress={shareStory}
-              style={styles.iconBtn}>
+            <Pressable onPress={shareStory} style={styles.iconBtn}>
               <Text style={styles.shareIcon}>↗</Text>
             </Pressable>
           </View>
@@ -82,27 +73,19 @@ export function StoryDetailScreen() {
                 borderColor: accent.border,
               },
             ]}>
-            <Text
-              style={[
-                styles.tagText,
-                {color: accent.color},
-              ]}>
+            <Text style={[styles.tagText, {color: accent.color}]}>
               {story.tag}
             </Text>
           </View>
 
-          <Text style={styles.title}>
-            {story.title}
-          </Text>
+          <Text style={styles.title}>{story.title}</Text>
 
-          <Text style={styles.body}>
-            {story.body}
-          </Text>
+          <Text style={styles.body}>{story.body}</Text>
         </ScrollView>
       </View>
     </BackgroundScreen>
   );
-};
+}
 
 const styles = StyleSheet.create({
   root: {
@@ -173,4 +156,3 @@ const styles = StyleSheet.create({
     color: '#FFFFFF',
   },
 });
-

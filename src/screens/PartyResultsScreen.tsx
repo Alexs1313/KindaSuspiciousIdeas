@@ -10,7 +10,7 @@ import {resetToMain} from '../navigation/rootNavigation';
 
 export function PartyResultsScreen() {
   const navigation = useNavigation<any>();
-  const {scores, resetGame} =
+  const {scores, resetParty} =
     useParty();
 
   const sortedScores = useMemo(
@@ -23,22 +23,22 @@ export function PartyResultsScreen() {
     [scores],
   );
 
-  const champion = sortedScores[0];
-  const championAvg =
-    champion &&
-    champion.turnCount > 0
+  const topGuest = sortedScores[0];
+  const topGuestAvg =
+    topGuest &&
+    topGuest.turnCount > 0
       ? Math.round(
-          champion.voteSum /
-            champion.turnCount,
+          topGuest.voteSum /
+            topGuest.turnCount,
         )
       : 0;
 
   const onHome = () => {
-    resetGame();
+    resetParty();
     resetToMain();
   };
 
-  if (!champion) {
+  if (!topGuest) {
     return null;
   }
 
@@ -49,17 +49,17 @@ export function PartyResultsScreen() {
           source={images.result}
           style={{marginBottom: 20}}
         />
-        <Text style={styles.championLabel}>
-          Champion of Suspicion
+        <Text style={styles.topGuestLabel}>
+          Top Score
         </Text>
-        <Text style={styles.championName}>
-          {champion.playerName}
+        <Text style={styles.topGuestName}>
+          {topGuest.guestName}
         </Text>
-        <Text style={styles.championPoints}>
-          {champion.totalPoints}
+        <Text style={styles.topGuestPoints}>
+          {topGuest.totalPoints}
         </Text>
-        <Text style={styles.championMeta}>
-          total points · {championAvg}% avg defense
+        <Text style={styles.topGuestMeta}>
+          total points · {topGuestAvg}% avg defense
         </Text>
 
         <View style={styles.leaderboard}>
@@ -76,7 +76,7 @@ export function PartyResultsScreen() {
 
               return (
                 <LinearGradient
-                  key={item.playerName}
+                  key={item.guestName}
                   colors={['#1A2347', '#0F1730'] as unknown as string[]}
                   start={{x: 0.5, y: 0}}
                   end={{x: 0.5, y: 1}}
@@ -103,7 +103,7 @@ export function PartyResultsScreen() {
                     </View>
                     <View style={styles.rowInfo}>
                       <Text style={styles.rowName}>
-                        {item.playerName}
+                        {item.guestName}
                       </Text>
                       <Text style={styles.rowMeta}>
                         {item.turnCount} turns ·{' '}
@@ -142,11 +142,7 @@ const styles = StyleSheet.create({
     paddingBottom: 44,
     alignItems: 'center',
   },
-  championIcon: {
-    fontSize: 40,
-    marginBottom: 8,
-  },
-  championLabel: {
+  topGuestLabel: {
     fontFamily: 'Manrope-Bold',
     fontSize: 11,
     letterSpacing: 1,
@@ -154,19 +150,19 @@ const styles = StyleSheet.create({
     textTransform: 'uppercase',
     marginBottom: 8,
   },
-  championName: {
+  topGuestName: {
     fontFamily: 'BowlbyOne-Regular',
     fontSize: 32,
     color: '#FFFFFF',
     marginBottom: 4,
   },
-  championPoints: {
+  topGuestPoints: {
     fontFamily: 'BowlbyOne-Regular',
     fontSize: 48,
     color: '#F7C948',
     marginBottom: 4,
   },
-  championMeta: {
+  topGuestMeta: {
     fontFamily: 'Manrope-Medium',
     fontSize: 13,
     color: '#7D88AD',

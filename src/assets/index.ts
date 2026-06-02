@@ -12,7 +12,7 @@ export const images = {
   onboardingHero3: require('./images/kinddsuspiccoonbrdhero3.png'),
   onboardingHero4: require('./images/kinddsuspiccoonbrdhero4.png'),
   pause: require('./images/pause.png'),
-  wheel: require('./images/whll.png'),
+  categoryPickerRing: require('./images/whll.png'),
   result: require('./images/result.png'),
   savedIcon: require('./images/savedic.png'),
   correctLabel: require('./images/correct_label.png'),

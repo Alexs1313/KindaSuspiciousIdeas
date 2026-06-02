@@ -15,10 +15,10 @@ export function PartySituationScreen() {
   const {
     currentRound,
     totalRounds,
-    currentPlayerName,
+    currentGuestName,
     currentCategory,
     currentSituation,
-    resetGame,
+    resetParty,
   } = useParty();
 
   const [pauseVisible, setPauseVisible] =
@@ -102,7 +102,7 @@ export function PartySituationScreen() {
           <View style={styles.cardInner}>
             <View style={styles.targetPill}>
               <Text style={styles.targetText}>
-                Situation for {currentPlayerName()}
+                Situation for {currentGuestName()}
               </Text>
             </View>
             <Text style={styles.situationText}>
@@ -127,9 +127,9 @@ export function PartySituationScreen() {
       <PartyPauseModal
         visible={pauseVisible}
         onResume={() => setPauseVisible(false)}
-        onEndGame={() => {
+        onEndParty={() => {
           setPauseVisible(false);
-          resetGame();
+          resetParty();
           resetToMain();
         }}
       />
