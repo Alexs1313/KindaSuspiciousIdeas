@@ -77,13 +77,13 @@ android {
     buildToolsVersion rootProject.ext.buildToolsVersion
     compileSdk rootProject.ext.compileSdkVersion
 
-    namespace "com.theksi.kindasuspicious"
+    namespace "com.ksikindasu.spicious"
     defaultConfig {
-        applicationId "com.theksi.kindasuspicious"
+        applicationId "com.ksikindasu.spicious"
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
-        versionCode 2
-        versionName "1.2"
+        versionCode 1
+        versionName "1.0"
     }
     signingConfigs {
         debug {
