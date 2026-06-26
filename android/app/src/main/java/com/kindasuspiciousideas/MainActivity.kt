@@ -1,4 +1,4 @@
-package com.kindasuspiciousideas
+package com.theksi.kindasuspicious
 
 import com.facebook.react.ReactActivity
 import com.facebook.react.ReactActivityDelegate
