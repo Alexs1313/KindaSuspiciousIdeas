@@ -1,4 +1,4 @@
-package com.ksikindasu.spicious
+package com.ksikinda.suspicious.melkamlk
 
 import android.app.Application
 import com.facebook.react.PackageList

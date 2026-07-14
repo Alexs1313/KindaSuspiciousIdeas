@@ -1,4 +1,4 @@
-package com.ksikindasu.spicious
+package com.ksikinda.suspicious.melkamlk
 
 import com.facebook.react.ReactActivity
 import com.facebook.react.ReactActivityDelegate
